@@ -154,8 +154,6 @@ std::vector<std::vector<float>> BinPacking::OnlineBestFit(const std::vector<floa
 
     for(size_t i = 0; i < weights.size(); i++)
     {
-        //size_t j;
-
         float min = BIN_CAPACITY + 1;
         int bestBin = -1;
 
@@ -191,6 +189,39 @@ std::vector<std::vector<float>> BinPacking::OnlineBestFit(const std::vector<floa
         std::cout << std::endl;
     }
 
-    
+
     return bins;
+}
+
+
+/*
+    @brief Computes and Solves the Bin Packing Problem by using the Off-line
+           First Fit algorithm
+    @param weights: vector of item weights to iterate and pack through
+
+    @return bins with populated item weights in each bin
+*/
+std::vector<std::vector<float>> BinPacking::OfflineFirstFit(const std::vector<float>& weights)
+{
+    std::vector<float> sortedWeights = weights;
+
+    std::sort(sortedWeights.begin(), sortedWeights.end(), std::greater<float>());
+
+    return OnlineFirstFit(sortedWeights);
+}
+
+/*
+    @brief Computes and Solves the Bin Packing Problem by using the Off-line
+           Best Fit algorithm
+    @param weights: vector of item weights to iterate and pack through
+
+    @return bins with populated item weights in each bin
+*/
+std::vector<std::vector<float>> BinPacking::OfflineBestFit(const std::vector<float>& weights)
+{
+    std::vector<float> sortedWeights = weights;
+
+    std::sort(sortedWeights.begin(), sortedWeights.end(), std::greater<float>());
+
+    return OnlineBestFit(sortedWeights);
 }

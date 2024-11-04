@@ -12,6 +12,7 @@
 #include <iostream>
 #include <vector>
 #include <fstream>
+#include <algorithm>
 
 class BinPacking
 {
@@ -42,5 +43,10 @@ class BinPacking
         // Computes the online best fit algorithm for the Bin Packing problem
         std::vector<std::vector<float>> OnlineBestFit(const std::vector<float>& weights);
 
+        // Computes the offline first fit algorithm for the Bin Packing problem
+        std::vector<std::vector<float>> OfflineFirstFit(const std::vector<float>& weights);
+
+        // Computes the offline first fit algorithm for the Bin Packing problem
+        std::vector<std::vector<float>> OfflineBestFit(const std::vector<float>& weights);
 };
 #endif
