@@ -1,8 +1,14 @@
 
 #include <iostream>
+#include "BinPacking.hpp"
 
 int main()
 {
-    std::cout << "Hello project 4" << std::endl;
+    BinPacking bp;
+    std::string ITEMS_TXT = "../items.txt";
+
+    bp.ReadFileAndPopulate(ITEMS_TXT, bp.weights);
+    
+
     return 0;
 }
