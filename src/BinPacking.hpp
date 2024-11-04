@@ -36,5 +36,8 @@ class BinPacking
         // Computes the online first fit algorithm for the Bin Packing problem
         std::vector<std::vector<float>> OnlineFirstFit(const std::vector<float>& weights);
 
+        // Computes the online next fit algorithm for the Bin Packing problem
+        std::vector<std::vector<float>> OnlineNextFit(const std::vector<float>& weights);
+
 };
 #endif

@@ -1,5 +1,10 @@
 #include "BinPacking.hpp"
 
+/*
+    @brief Reads in a text file and populates a vector containing item weights
+    @param(s) fileName: text file to read in items from
+              weights: vector to hold the weights associated with each item in the text file
+*/
 void BinPacking::ReadFileAndPopulate(const std::string &fileName, std::vector<float> &weights)
 {
     std::ifstream fileRead(fileName);
@@ -34,11 +39,17 @@ void BinPacking::ReadFileAndPopulate(const std::string &fileName, std::vector<fl
         std::cout << w << " ";
     }
     std::cout << std::endl;
-    // 
+    // DELETE!
 
 }
 
+/*
+    @brief Computes and Solves the Bin Packing Problem by using the On-line
+           First Fit algorithm
+    @param weights: vector of item weights to iterate and pack through
 
+    @return bins with populated item weights in each bin
+*/
 std::vector<std::vector<float>> BinPacking::OnlineFirstFit(const std::vector<float>& weights)
 {
     std::vector<std::vector<float>> bins;
@@ -66,17 +77,65 @@ std::vector<std::vector<float>> BinPacking::OnlineFirstFit(const std::vector<flo
         }
     }
 
+    std::cout << "Number of Bins Needed: " << bins.size() << std::endl;
     for (size_t i = 0; i < bins.size(); ++i)
     {
         std::cout << "b" << (i + 1) << ": ";
-        for (const auto& item : bins[i])
+        for (const auto& weight : bins[i])
         {
-            std::cout << item << " ";
+            std::cout << weight << " ";
         }
         std::cout << std::endl;
     }
+    
+    return bins;
+}
 
-    std::cout << "num bins: " << bins.size() << std::endl;
+
+/*
+    @brief Computes and Solves the Bin Packing Problem by using the On-line
+           Next Fit algorithm
+    @param weights: vector of item weights to iterate and pack through
+
+    @return bins with populated item weights in each bin
+*/
+std::vector<std::vector<float>> BinPacking::OnlineNextFit(const std::vector<float>& weights)
+{
+    std::vector<std::vector<float>> bins;
+    //std::vector<float> remainingBinWeight;
+    std::vector<float> currBin;
+    float remainingBinWeight = BIN_CAPACITY;
+
+    for(size_t i = 0; i < weights.size(); i++)
+    {        
+        if(weights[i] > remainingBinWeight)
+        {
+            bins.push_back(currBin);
+            currBin = {weights[i]};
+            remainingBinWeight = BIN_CAPACITY - weights[i];
+        }
+        else
+        {
+            currBin.push_back(weights[i]);
+            remainingBinWeight -= weights[i];
+        }
+    }
+
+    if(currBin.size() != 0)
+    {
+        bins.push_back(currBin);
+    }
+
+    std::cout << "Number of Bins Needed: " << bins.size() << std::endl;
+    for (size_t i = 0; i < bins.size(); ++i)
+    {
+        std::cout << "b" << (i + 1) << ": ";
+        for (const auto& weight : bins[i])
+        {
+            std::cout << weight << " ";
+        }
+        std::cout << std::endl;
+    }
     
     return bins;
 }
