@@ -204,9 +204,9 @@ std::vector<std::vector<float>> BinPacking::OnlineBestFit(const std::vector<floa
 std::vector<std::vector<float>> BinPacking::OfflineFirstFit(const std::vector<float>& weights)
 {
     std::vector<float> sortedWeights = weights;
-
-    std::sort(sortedWeights.begin(), sortedWeights.end(), std::greater<float>());
-
+     
+    Sort(sortedWeights);
+    
     return OnlineFirstFit(sortedWeights);
 }
 
@@ -221,7 +221,43 @@ std::vector<std::vector<float>> BinPacking::OfflineBestFit(const std::vector<flo
 {
     std::vector<float> sortedWeights = weights;
 
-    std::sort(sortedWeights.begin(), sortedWeights.end(), std::greater<float>());
+    Sort(sortedWeights);
 
     return OnlineBestFit(sortedWeights);
+}
+
+/*
+    @brief Helper function for off-line algorithms to sort item weights
+           in descending order. This function uses a version of the 
+           bubble sort algorithm to solve this
+    @param numbers: vector of weights to sort through
+*/
+void BinPacking::Sort(std::vector<float>& numbers)
+{
+    int n = numbers.size();
+    for(int i = 0; i < n - 1; i++)
+    {
+        for(int j = 0; j < n - i - 1; j++)
+        {
+            if(numbers[j] < numbers[j+1])
+            {
+                Swap(numbers[j], numbers[j+1]);
+            }
+        }
+    }
+}
+
+/*
+    @brief Helper function for Sort() that swaps the values of two
+           variables
+
+    @param(s) a: Reference to the first variable
+              b: Reference to the second variable
+*/
+template <typename T>
+void BinPacking::Swap(T& a, T& b)
+{
+    T tmp = a;
+    a = b;
+    b = tmp;
 }

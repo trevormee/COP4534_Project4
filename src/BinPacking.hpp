@@ -23,6 +23,13 @@ class BinPacking
 
         // Helper function to generate the optimal solution
         void perm1(std::vector<float>& weights);
+
+        // Helper function for offline algorithms to sort item weights
+        void Sort(std::vector<float>& numbers);
+
+        // Helper function for Sort() to swap two weights if conditions are met
+        template <typename T>
+        void Swap(T& a, T& b);
        
     public:
         // Public Instance Variables
