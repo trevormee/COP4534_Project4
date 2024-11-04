@@ -27,13 +27,14 @@ class BinPacking
         // Public Instance Variables
         std::vector<float> weights;
 
+        // Reads in a text file and populates our weights vector
         void ReadFileAndPopulate(const std::string &fileName, std::vector<float> &weights);
 
+        // Computes the optimal solution for the Bin Packing problem
         std::vector<std::vector<float>> OptimalSolution(const std::vector<float>& weights);
 
+        // Computes the online first fit algorithm for the Bin Packing problem
         std::vector<std::vector<float>> OnlineFirstFit(const std::vector<float>& weights);
-
-        void displayVector();
 
 };
 #endif

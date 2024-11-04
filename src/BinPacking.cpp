@@ -27,11 +27,56 @@ void BinPacking::ReadFileAndPopulate(const std::string &fileName, std::vector<fl
 
     fileRead.close();
 
+    // Delete at submission - only used for testing! 
     std::cout << "Final weights vector contents: ";
     for (const auto& w : weights)
     {
         std::cout << w << " ";
     }
     std::cout << std::endl;
+    // 
 
+}
+
+
+std::vector<std::vector<float>> BinPacking::OnlineFirstFit(const std::vector<float>& weights)
+{
+    std::vector<std::vector<float>> bins;
+    std::vector<float> remainingBinWeight;
+
+    for(size_t i = 0; i < weights.size(); i++)
+    {
+        bool placed = false;
+
+        for(size_t j = 0; j < bins.size(); j++)
+        {
+            if(remainingBinWeight[j] >= weights[i])
+            {
+                bins[j].push_back(weights[i]);
+                remainingBinWeight[j] -= weights[i];
+                placed = true;
+                break;
+            }
+        }
+
+        if(!placed)
+        {
+            bins.push_back({weights[i]});
+            remainingBinWeight.push_back(BIN_CAPACITY - weights[i]);
+        }
+    }
+
+    for (size_t i = 0; i < bins.size(); ++i)
+    {
+        std::cout << "b" << (i + 1) << ": ";
+        for (const auto& item : bins[i])
+        {
+            std::cout << item << " ";
+        }
+        std::cout << std::endl;
+    }
+
+    std::cout << "num bins: " << bins.size() << std::endl;
+    
+    return bins;
 }
