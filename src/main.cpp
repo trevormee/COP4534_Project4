@@ -9,39 +9,84 @@ int main()
 
     bp.ReadFileAndPopulate(ITEMS_TXT, bp.weights);
     bp.OnlineFirstFit(bp.weights);
+    std::cout << std::endl;
     bp.OnlineNextFit(bp.weights);
+    std::cout << std::endl;
+    bp.OnlineBestFit(bp.weights);
 
     return 0;
 }
-/*
 
-// C++ program to find number of bins required using
-// next fit algorithm.
+/**
+
+// C++ program to find number 
+// of bins required using
+// Best fit algorithm.
 #include <bits/stdc++.h>
 using namespace std;
 
-// Returns number of bins required using next fit
+// Returns number of bins required using best fit
 // online algorithm
-int nextFit(int weight[], int n, int c)
+int bestFit(int weight[], int n, int c)
 {
-	// Initialize result (Count of bins) and remaining
-	// capacity in current bin.
-	int res = 0, bin_rem = c;
+	// Initialize result (Count of bins)
+	int res = 0;
+
+	// Create an array to store 
+	// remaining space in bins
+	// there can be at most n bins
+	int bin_rem[n];
 
 	// Place items one by one
 	for (int i = 0; i < n; i++) {
-		// If this item can't fit in current bin
-		if (weight[i] > bin_rem) {
-			res++; // Use a new bin
-			bin_rem = c - weight[i];
+	
+		// Find the best bin that can accommodate
+		// weight[i]
+		int j;
+
+		// Initialize minimum space left and index
+		// of best bin
+		int min = c + 1, bi = 0;
+
+		for (j = 0; j < res; j++) {
+			if (bin_rem[j] >= weight[i] && bin_rem[j] - 
+									weight[i] < min) {
+				bi = j;
+				min = bin_rem[j] - weight[i];
+			}
 		}
-		else
-			bin_rem -= weight[i];
+
+		// If no bin could accommodate weight[i],
+		// create a new bin
+		if (min == c + 1) {
+			bin_rem[res] = c - weight[i];
+			res++;
+		}
+		else // Assign the item to best bin
+			bin_rem[bi] -= weight[i];
 	}
 	return res;
 }
 
-// ONLINE FIRST FIT
+// Driver program
+int main()
+{
+	int weight[] = { 2, 5, 4, 7, 1, 3, 8 };
+	int c = 10;
+	int n = sizeof(weight) / sizeof(weight[0]);
+	cout << "Number of bins required in Best Fit : "
+		<< bestFit(weight, n, c);
+	return 0;
+}
+//////////
+
+
+
+
+
+// MINE!!!!!!
+std::vector<std::vector<float>> BinPacking::OnlineFirstFit(const std::vector<float>& weights)
+{
     std::vector<std::vector<float>> bins;
     std::vector<float> remainingBinWeight;
 
@@ -79,5 +124,7 @@ int nextFit(int weight[], int n, int c)
     }
     
     return bins;
+}
 
-*/
+
+* */

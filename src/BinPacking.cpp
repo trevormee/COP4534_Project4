@@ -102,7 +102,6 @@ std::vector<std::vector<float>> BinPacking::OnlineFirstFit(const std::vector<flo
 std::vector<std::vector<float>> BinPacking::OnlineNextFit(const std::vector<float>& weights)
 {
     std::vector<std::vector<float>> bins;
-    //std::vector<float> remainingBinWeight;
     std::vector<float> currBin;
     float remainingBinWeight = BIN_CAPACITY;
 
@@ -136,6 +135,62 @@ std::vector<std::vector<float>> BinPacking::OnlineNextFit(const std::vector<floa
         }
         std::cout << std::endl;
     }
+
+    return bins;
+}
+
+
+/*
+    @brief Computes and Solves the Bin Packing Problem by using the On-line
+           Best Fit algorithm
+    @param weights: vector of item weights to iterate and pack through
+
+    @return bins with populated item weights in each bin
+*/
+std::vector<std::vector<float>> BinPacking::OnlineBestFit(const std::vector<float>& weights)
+{
+    std::vector<std::vector<float>> bins;
+    std::vector<float> remainingBinWeight;
+
+    for(size_t i = 0; i < weights.size(); i++)
+    {
+        //size_t j;
+
+        float min = BIN_CAPACITY + 1;
+        int bestBin = -1;
+
+        for(size_t j = 0; j < remainingBinWeight.size(); j++)
+        {
+            if(remainingBinWeight[j] >= weights[i] && (remainingBinWeight[j] - weights[i] < min))
+            {
+                bestBin = j;
+                min = remainingBinWeight[j] - weights[i];
+            }
+        }
+
+        if(bestBin == -1)
+        {
+            bins.push_back({weights[i]});
+            remainingBinWeight.push_back(BIN_CAPACITY - weights[i]);
+        }
+        else
+        {
+            bins[bestBin].push_back(weights[i]);
+            remainingBinWeight[bestBin] -= weights[i];
+        }
+    }
+
+    std::cout << "Number of Bins Needed: " << bins.size() << std::endl;
+    for (size_t i = 0; i < bins.size(); ++i)
+    {
+        std::cout << "b" << (i + 1) << ": ";
+        for (const auto& weight : bins[i])
+        {
+            std::cout << weight << " ";
+        }
+        std::cout << std::endl;
+    }
+
     
     return bins;
 }
