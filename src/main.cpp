@@ -5,14 +5,14 @@
 int main()
 {
     BinPacking bp;
-    //std::string ITEMS_TXT = "../items.txt";
-    std::string ITEMS_TXT = "../fakeItems.txt";
+    std::string ITEMS_TXT = "../items.txt";
+    //std::string ITEMS_TXT = "../fakeItems.txt";
     bp.ReadFileAndPopulate(ITEMS_TXT, bp.weights);
 
-    /*
+    
     std::cout << "Online First Fit ->" << std::endl;
     bp.OnlineFirstFit(bp.weights);
-    
+    /*
     std::cout << "Online Next Fit ->" << std::endl;
     bp.OnlineNextFit(bp.weights);
     
@@ -27,8 +27,9 @@ int main()
 
     
 
-    std::cout << "Optimal -->" << std::endl;
-    bp.OptimalSolution(bp.weights);
+    //std::cout << "Optimal -->" << std::endl;
+    //bp.OptimalSolution(bp.weights);
+    bp.SolveBinPacking();
 
     return 0;
 }

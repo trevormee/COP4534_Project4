@@ -13,6 +13,7 @@
 #include <vector>
 #include <fstream>
 #include <algorithm>
+#include <iomanip>
 
 class BinPacking
 {
@@ -58,5 +59,8 @@ class BinPacking
 
         // Computes the optimal solution for the Bin Packing problem
         std::vector<std::vector<float>> OptimalSolution(const std::vector<float>& weights);
+
+        // Solves the Bin Packing Problem and displays the results
+        void SolveBinPacking();
 };
 #endif

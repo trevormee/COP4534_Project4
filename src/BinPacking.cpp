@@ -77,7 +77,7 @@ std::vector<std::vector<float>> BinPacking::OnlineFirstFit(const std::vector<flo
         }
     }
 
-    /*
+    
     std::cout << "Number of Bins Needed: " << bins.size() << std::endl;
     for (size_t i = 0; i < bins.size(); ++i)
     {
@@ -88,7 +88,7 @@ std::vector<std::vector<float>> BinPacking::OnlineFirstFit(const std::vector<flo
         }
         std::cout << std::endl;
     }
-    */
+    
     
     return bins;
 }
@@ -266,7 +266,11 @@ void BinPacking::Swap(T& a, T& b)
     b = tmp;
 }
 
-
+/*
+    @brief Helper function for OptimalSolution() to permutate through (n-1)! 
+           potential solutions
+    @param s: vector to permutate through
+*/
 void BinPacking::perm1(std::vector<float>& s)
 {
     int m, k, p, q;
@@ -302,7 +306,14 @@ void BinPacking::perm1(std::vector<float>& s)
     }
 }
 
+/*
+    @brief Helper function for OptimalSolution() to compute how many
+           permutations we will have to go through to obtain the most 
+           optimal solution
+    @param n: value to compute (n-1)! for 
 
+    @return total number of permutations to go through
+*/
 int BinPacking::Factorial(int n)
 {
     int numPermutations = 1;
@@ -314,6 +325,14 @@ int BinPacking::Factorial(int n)
     return numPermutations;   
 }
 
+/*
+    @brief Computes the optimal solution of the Bin Packing Problem in a "brute force" way 
+           by going through (numItems - 1)! permutations and keeping the best bin
+           layout
+    @param weights: vector of item weights to iterate and pack through
+
+    @return bins with populated item weights in each bin
+*/
 std::vector<std::vector<float>> BinPacking::OptimalSolution(const std::vector<float>& weights)
 {
      std::vector<std::vector<float>> bins;
@@ -322,7 +341,7 @@ std::vector<std::vector<float>> BinPacking::OptimalSolution(const std::vector<fl
      std::vector<float> sortedWeights = weights;
      Sort(sortedWeights);
      int count = 0;
-     int numPermutations = Factorial(numItems);
+     int numPermutations = Factorial(numItems - 1);
 
      std::cout << numPermutations << std::endl;
 
@@ -353,4 +372,20 @@ std::vector<std::vector<float>> BinPacking::OptimalSolution(const std::vector<fl
         std::cout << std::endl;
     }
      return bins;
+}
+
+/*
+    @brief 
+*/
+void BinPacking::SolveBinPacking()
+{
+    std::string ITEMS_TXT = "../items.txt";
+    ReadFileAndPopulate(ITEMS_TXT, weights);
+    
+    std::cout << std::left << std::setw(10) << "Policy" << std::setw(40) << "Total Bins Used" << std::endl;
+
+    std::vector<std::vector<float>> onlineFirstFit = OnlineFirstFit(weights);
+    int numBinsOnlineFirstFit = onlineFirstFit.size();
+    std::cout << std::left << std::setw(10) << "Online Algorithm" << std::setw(20) << "" << std::endl;
+    std::cout << std::left << std::setw(10) << "First Fit" << std::setw(20) << numBinsOnlineFirstFit << std::endl;
 }
