@@ -340,15 +340,15 @@ std::vector<std::vector<float>> BinPacking::OptimalSolution(const std::vector<fl
 
      std::vector<float> sortedWeights = weights;
      Sort(sortedWeights);
-     int count = 0;
+     //int count = 0;
      int numPermutations = Factorial(numItems - 1);
 
-     std::cout << numPermutations << std::endl;
+     //std::cout << numPermutations << std::endl;
 
      for(int i = 0; i < numPermutations; ++i)
      {
         std::vector<std::vector<float>> currBinPermuatation = OnlineBestFit(sortedWeights);
-        count++;
+        //count++;
         int currNumOfBins = currBinPermuatation.size();
         
         if(currNumOfBins < minBins)
@@ -359,7 +359,8 @@ std::vector<std::vector<float>> BinPacking::OptimalSolution(const std::vector<fl
 
         perm1(sortedWeights);
      }
-     
+    
+    /*
     std::cout << "\nNumber of bins needed: " << bins.size() << std::endl;
     std::cout << "Count: " << count << std::endl;
     for (size_t i = 0; i < bins.size(); ++i)
@@ -371,7 +372,9 @@ std::vector<std::vector<float>> BinPacking::OptimalSolution(const std::vector<fl
         }
         std::cout << std::endl;
     }
-     return bins;
+    */
+     
+    return bins;
 }
 
 /*
@@ -405,9 +408,12 @@ void BinPacking::SolveBinPacking()
 
     std::cout << std::left << std::setw(colWidth) << "Policy" << std::setw(colWidth) << "Total Bins Used" << std::endl;
     std::cout << std::string(40, '-') << std::endl;
-
-    std::cout << "Optimal Solution" << std::endl;
     
+    // Optimal Solution
+    std::vector<std::vector<float>> optimalSolution = OptimalSolution(weights);
+    int numBinsOptimalSolution = optimalSolution.size();
+    std::cout << std::left << std::setw(colWidth) << "Optimal Solution" << std::setw(colWidth) << numBinsOptimalSolution << std::endl;
+    std::cout << std::string(16, '-') << std::endl;
 
     std::cout << std::left << std::setw(colWidth) << "Online Algorithm" << std::endl;
     std::cout << std::string(16, '-') << std::endl;
@@ -441,6 +447,8 @@ void BinPacking::SolveBinPacking()
     std::cout << std::left << std::setw(colWidth) << "Best Fit" << std::setw(colWidth) << numBinsOfflineBestFit << std::endl;
 
     // Print each bin packing solution
+    std::cout << "\nOptimal Solution:" << std::endl;
+    PrintBins(optimalSolution);
     std::cout << "\nOnline First Fit:" << std::endl;
     PrintBins(onlineFirstFit);
     std::cout << "\nOnline Next Fit:" << std::endl;
