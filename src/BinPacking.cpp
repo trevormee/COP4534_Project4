@@ -211,7 +211,6 @@ std::vector<std::vector<float>> BinPacking::OfflineFirstFit(const std::vector<fl
      
     Sort(sortedWeights);
     
-    
     return OnlineFirstFit(sortedWeights);
 }
 
@@ -399,13 +398,16 @@ void BinPacking::PrintBins(std::vector<std::vector<float>> algorithm)
 */
 void BinPacking::SolveBinPacking()
 {
-    std::string ITEMS_TXT = "../items.txt";
+    // Read in file and populate item weights vector
     ReadFileAndPopulate(ITEMS_TXT, weights);
-    
+
     int colWidth = 20;
 
     std::cout << std::left << std::setw(colWidth) << "Policy" << std::setw(colWidth) << "Total Bins Used" << std::endl;
     std::cout << std::string(40, '-') << std::endl;
+
+    std::cout << "Optimal Solution" << std::endl;
+    
 
     std::cout << std::left << std::setw(colWidth) << "Online Algorithm" << std::endl;
     std::cout << std::string(16, '-') << std::endl;

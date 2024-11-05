@@ -20,6 +20,7 @@ class BinPacking
     private:
         // Private Instance Variables
         const int BIN_CAPACITY = 1;
+        const std::string ITEMS_TXT = "../items.txt";
         int numItems;
 
         // Helper function for offline algorithms to sort item weights

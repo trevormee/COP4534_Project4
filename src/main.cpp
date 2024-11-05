@@ -26,9 +26,9 @@ int main()
     //bp.OfflineBestFit(bp.weights);
 
     
-
     //std::cout << "Optimal -->" << std::endl;
     //bp.OptimalSolution(bp.weights);
+
     bp.SolveBinPacking();
 
     return 0;
