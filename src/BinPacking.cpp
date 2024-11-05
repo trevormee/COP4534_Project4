@@ -180,6 +180,7 @@ std::vector<std::vector<float>> BinPacking::OnlineBestFit(const std::vector<floa
         }
     }
 
+    /*
     std::cout << "Number of Bins Needed: " << bins.size() << std::endl;
     for (size_t i = 0; i < bins.size(); ++i)
     {
@@ -190,7 +191,7 @@ std::vector<std::vector<float>> BinPacking::OnlineBestFit(const std::vector<floa
         }
         std::cout << std::endl;
     }
-
+    */
 
     return bins;
 }
@@ -322,6 +323,9 @@ std::vector<std::vector<float>> BinPacking::OptimalSolution(const std::vector<fl
      Sort(sortedWeights);
      int count = 0;
      int numPermutations = Factorial(numItems);
+
+     std::cout << numPermutations << std::endl;
+
      for(int i = 0; i < numPermutations; ++i)
      {
         std::vector<std::vector<float>> currBinPermuatation = OnlineBestFit(sortedWeights);
