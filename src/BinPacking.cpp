@@ -77,7 +77,7 @@ std::vector<std::vector<float>> BinPacking::OnlineFirstFit(const std::vector<flo
         }
     }
 
-    
+    /*
     std::cout << "Number of Bins Needed: " << bins.size() << std::endl;
     for (size_t i = 0; i < bins.size(); ++i)
     {
@@ -88,7 +88,7 @@ std::vector<std::vector<float>> BinPacking::OnlineFirstFit(const std::vector<flo
         }
         std::cout << std::endl;
     }
-    
+    */
     
     return bins;
 }
@@ -127,6 +127,7 @@ std::vector<std::vector<float>> BinPacking::OnlineNextFit(const std::vector<floa
         bins.push_back(currBin);
     }
 
+    /*
     std::cout << "Number of Bins Needed: " << bins.size() << std::endl;
     for (size_t i = 0; i < bins.size(); ++i)
     {
@@ -137,7 +138,7 @@ std::vector<std::vector<float>> BinPacking::OnlineNextFit(const std::vector<floa
         }
         std::cout << std::endl;
     }
-
+    */
     return bins;
 }
 
@@ -375,17 +376,77 @@ std::vector<std::vector<float>> BinPacking::OptimalSolution(const std::vector<fl
 }
 
 /*
-    @brief 
+    @brief Helper function for SolveBinPacking() to print each algorithms
+           bin setup after completing said algorithm
+    @param algorithm: vector of a vector of floats to loop through
+*/
+void BinPacking::PrintBins(std::vector<std::vector<float>> algorithm)
+{
+    for (size_t i = 0; i < algorithm.size(); ++i)
+    {
+        std::cout << "b" << (i + 1) << ": ";
+        for (const auto& weight : algorithm[i])
+        {
+            std::cout << weight << " ";
+        }
+        std::cout << std::endl;
+    }
+}
+
+/*
+    @brief Runs each bin packing solution algorithm and prints
+           out results in a readable format
 */
 void BinPacking::SolveBinPacking()
 {
     std::string ITEMS_TXT = "../items.txt";
     ReadFileAndPopulate(ITEMS_TXT, weights);
     
-    std::cout << std::left << std::setw(10) << "Policy" << std::setw(40) << "Total Bins Used" << std::endl;
+    int colWidth = 20;
 
+    std::cout << std::left << std::setw(colWidth) << "Policy" << std::setw(colWidth) << "Total Bins Used" << std::endl;
+    std::cout << std::string(40, '-') << std::endl;
+
+    std::cout << std::left << std::setw(colWidth) << "Online Algorithm" << std::endl;
+    std::cout << std::string(16, '-') << std::endl;
+
+    // Online First Fit
     std::vector<std::vector<float>> onlineFirstFit = OnlineFirstFit(weights);
     int numBinsOnlineFirstFit = onlineFirstFit.size();
-    std::cout << std::left << std::setw(10) << "Online Algorithm" << std::setw(20) << "" << std::endl;
-    std::cout << std::left << std::setw(10) << "First Fit" << std::setw(20) << numBinsOnlineFirstFit << std::endl;
-}
+    std::cout << std::left << std::setw(colWidth) << "First Fit" << std::setw(colWidth) << numBinsOnlineFirstFit << std::endl;
+    
+    // Online Next Fit
+    std::vector<std::vector<float>> onlineNextFit = OnlineNextFit(weights);
+    int numBinsOnlineNextFit = onlineNextFit.size();
+    std::cout << std::left << std::setw(colWidth) << "Next Fit" << std::setw(colWidth) << numBinsOnlineNextFit << std::endl;
+    
+    // Online Best Fit
+    std::vector<std::vector<float>> onlineBestFit = OnlineBestFit(weights);
+    int numBinsOnlineBestFit = onlineBestFit.size();
+    std::cout << std::left << std::setw(colWidth) << "Best Fit" << std::setw(colWidth) << numBinsOnlineBestFit << std::endl;
+
+    std::cout << std::left << std::setw(colWidth) << "Offline Algorithm" << std::endl;
+    std::cout << std::string(17, '-') << std::endl;
+
+    // Offline First Fit
+    std::vector<std::vector<float>> offlineFirstFit = OfflineFirstFit(weights);
+    int numBinsOfflineFirstFit = offlineFirstFit.size();
+    std::cout << std::left << std::setw(colWidth) << "First Fit" << std::setw(colWidth) << numBinsOfflineFirstFit << std::endl;
+
+    // Offline Best Fit
+    std::vector<std::vector<float>> offlineBestFit = OfflineBestFit(weights);
+    int numBinsOfflineBestFit = offlineBestFit.size();
+    std::cout << std::left << std::setw(colWidth) << "Best Fit" << std::setw(colWidth) << numBinsOfflineBestFit << std::endl;
+
+    // Print each bin packing solution
+    std::cout << "\nOnline First Fit:" << std::endl;
+    PrintBins(onlineFirstFit);
+    std::cout << "\nOnline Next Fit:" << std::endl;
+    PrintBins(onlineNextFit);
+    std::cout << "\nOnline Best Fit:" << std::endl;
+    PrintBins(onlineBestFit);
+    std::cout << "\nOffline First Fit:" << std::endl;
+    PrintBins(offlineFirstFit);
+    std::cout << "\nOffline Best Fit:" << std::endl;
+    PrintBins(offlineBestFit);
+ }

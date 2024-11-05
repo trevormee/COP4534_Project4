@@ -34,6 +34,9 @@ class BinPacking
 
         // Helper function to determine how many permutations we loop thru for optimal solution
         int Factorial(int n);
+
+        // Helper function to print bin packing algorithm results in a readable way
+        void PrintBins(std::vector<std::vector<float>> algorithm);
        
     public:
         // Public Instance Variables
