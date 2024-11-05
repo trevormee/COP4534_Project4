@@ -77,6 +77,7 @@ std::vector<std::vector<float>> BinPacking::OnlineFirstFit(const std::vector<flo
         }
     }
 
+    /*
     std::cout << "Number of Bins Needed: " << bins.size() << std::endl;
     for (size_t i = 0; i < bins.size(); ++i)
     {
@@ -87,6 +88,7 @@ std::vector<std::vector<float>> BinPacking::OnlineFirstFit(const std::vector<flo
         }
         std::cout << std::endl;
     }
+    */
     
     return bins;
 }
@@ -207,6 +209,7 @@ std::vector<std::vector<float>> BinPacking::OfflineFirstFit(const std::vector<fl
      
     Sort(sortedWeights);
     
+    
     return OnlineFirstFit(sortedWeights);
 }
 
@@ -260,4 +263,90 @@ void BinPacking::Swap(T& a, T& b)
     T tmp = a;
     a = b;
     b = tmp;
+}
+
+
+void BinPacking::perm1(std::vector<float>& s)
+{
+    int m, k, p, q;
+
+    m = numItems - 2;
+
+    while(m > 0 && s[m] > s[m + 1])
+    {
+        m = m - 1;
+    }
+
+    if(m < 0)
+    {
+        std::reverse(s.begin(), s.end());
+        return;
+    }
+
+    k = numItems - 1;
+    while(s[m] > s[k])
+    {
+        k = k - 1;
+    }
+
+    Swap(s[m],s[k]);
+
+    p = m + 1;
+    q = numItems - 1;
+    while (p < q)
+    {
+        Swap(s[p], s[q]);
+        p++;
+        q--;
+    }
+}
+
+
+int BinPacking::Factorial(int n)
+{
+    int numPermutations = 1;
+    for(int i = 1; i <= n; ++i)
+    {
+        numPermutations *= i;
+    }
+
+    return numPermutations;   
+}
+
+std::vector<std::vector<float>> BinPacking::OptimalSolution(const std::vector<float>& weights)
+{
+     std::vector<std::vector<float>> bins;
+     int minBins = numItems;
+
+     std::vector<float> sortedWeights = weights;
+     Sort(sortedWeights);
+     int count = 0;
+     int numPermutations = Factorial(numItems);
+     for(int i = 0; i < numPermutations; ++i)
+     {
+        std::vector<std::vector<float>> currBinPermuatation = OnlineBestFit(sortedWeights);
+        count++;
+        int currNumOfBins = currBinPermuatation.size();
+        
+        if(currNumOfBins < minBins)
+        {
+            minBins = currBinPermuatation.size();
+            bins = currBinPermuatation;
+        }
+
+        perm1(sortedWeights);
+     }
+     
+    std::cout << "\nNumber of bins needed: " << bins.size() << std::endl;
+    std::cout << "Count: " << count << std::endl;
+    for (size_t i = 0; i < bins.size(); ++i)
+    {
+        std::cout << "b" << (i + 1) << ": ";
+        for (const auto& weight : bins[i])
+        {
+            std::cout << weight << " ";
+        }
+        std::cout << std::endl;
+    }
+     return bins;
 }

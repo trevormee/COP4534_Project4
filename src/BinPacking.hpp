@@ -21,15 +21,18 @@ class BinPacking
         const int BIN_CAPACITY = 1;
         int numItems;
 
-        // Helper function to generate the optimal solution
-        void perm1(std::vector<float>& weights);
-
         // Helper function for offline algorithms to sort item weights
         void Sort(std::vector<float>& numbers);
 
         // Helper function for Sort() to swap two weights if conditions are met
         template <typename T>
         void Swap(T& a, T& b);
+
+        // Helper function to generate the optimal solution
+        void perm1(std::vector<float>& s);
+
+        // Helper function to determine how many permutations we loop thru for optimal solution
+        int Factorial(int n);
        
     public:
         // Public Instance Variables
@@ -37,9 +40,6 @@ class BinPacking
 
         // Reads in a text file and populates our weights vector
         void ReadFileAndPopulate(const std::string &fileName, std::vector<float> &weights);
-
-        // Computes the optimal solution for the Bin Packing problem
-        std::vector<std::vector<float>> OptimalSolution(const std::vector<float>& weights);
 
         // Computes the online first fit algorithm for the Bin Packing problem
         std::vector<std::vector<float>> OnlineFirstFit(const std::vector<float>& weights);
@@ -55,5 +55,8 @@ class BinPacking
 
         // Computes the offline first fit algorithm for the Bin Packing problem
         std::vector<std::vector<float>> OfflineBestFit(const std::vector<float>& weights);
+
+        // Computes the optimal solution for the Bin Packing problem
+        std::vector<std::vector<float>> OptimalSolution(const std::vector<float>& weights);
 };
 #endif
