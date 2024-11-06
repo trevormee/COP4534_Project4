@@ -1,9 +1,13 @@
 /***************************************************************
   Student Name: Trevor Mee
-  File Name: AdjacencyMatrix.hpp
+  File Name: BinPacking.hpp
   Project 4
 
-  @brief 
+  @brief Contains function declarations for solving the Bin 
+         Packing Problem using on-line algorithm approaches
+         (First Fit, Next Fit, Best Fit), off-line algorithm
+         approaches (First Fit, Best Fit), and using a brute
+         force permutation approach
 ***************************************************************/
 
 #ifndef BINPACKING_HPP
