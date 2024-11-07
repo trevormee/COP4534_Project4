@@ -306,15 +306,33 @@ int BinPacking::Factorial(int n)
 */
 std::vector<std::vector<float>> BinPacking::OptimalSolution(const std::vector<float>& weights)
 {
-     std::vector<std::vector<float>> bins;
-     int minBins = numItems;
+    std::vector<std::vector<float>> bins;
+    int minBins = numItems;
 
-     std::vector<float> sortedWeights = weights;
-     Sort(sortedWeights);
+    std::vector<float> sortedWeights = weights;
+    Sort(sortedWeights);
+
+    for(auto w : sortedWeights)
+    {
+        std:: cout << w << " ";
+    }
+    std::cout << std::endl;
+     
+    float sum = 0.0f;
+    for (float weight : sortedWeights)
+    {
+        sum += weight;
+    }
+
+    // Calculate the minimum bins by taking the ceiling of (sum / BIN_CAPACITY)
+    int minNumberOfBinsNeeded = static_cast<int>(std::ceil(sum / BIN_CAPACITY));
+    std::cout << "sum = " << sum << std::endl;
+    std::cout << "Min num bins needed = " << minNumberOfBinsNeeded << std::endl;
 
      int numPermutations = Factorial(numItems - 1);
      //std::cout << "Num Permutations: " << numPermutations << std::endl;
 
+     int count = 0;
      for(int i = 0; i < numPermutations; ++i)
      {
         std::vector<std::vector<float>> currBinPermuatation = OnlineBestFit(sortedWeights);
@@ -324,12 +342,16 @@ std::vector<std::vector<float>> BinPacking::OptimalSolution(const std::vector<fl
         {
             minBins = currBinPermuatation.size();
             bins = currBinPermuatation;
+
+            if (minBins <= minNumberOfBinsNeeded)
+            {
+                break;
+            }
         }
 
         perm1(sortedWeights);
-        
      }
-    
+    std::cout << "Count = " << count << std::endl;
     return bins;
 }
 
