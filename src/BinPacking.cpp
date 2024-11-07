@@ -236,7 +236,7 @@ void BinPacking::Swap(T& a, T& b)
 
 
 /*
-    @brief Helper function for OptimalSolution() to permutate through (n-1)! 
+    @brief Helper function for OptimalSolution() to permutate through n! 
            potential solutions
     @param s: vector to permutate through
 */
@@ -280,7 +280,7 @@ void BinPacking::perm1(std::vector<float>& s)
     @brief Helper function for OptimalSolution() to compute how many
            permutations we will have to go through to obtain the most 
            optimal solution
-    @param n: value to compute (n-1)! for 
+    @param n: value to compute n! for 
 
     @return total number of permutations to go through
 */
@@ -313,6 +313,7 @@ std::vector<std::vector<float>> BinPacking::OptimalSolution(const std::vector<fl
      Sort(sortedWeights);
 
      int numPermutations = Factorial(numItems - 1);
+     //std::cout << "Num Permutations: " << numPermutations << std::endl;
 
      for(int i = 0; i < numPermutations; ++i)
      {
@@ -326,6 +327,7 @@ std::vector<std::vector<float>> BinPacking::OptimalSolution(const std::vector<fl
         }
 
         perm1(sortedWeights);
+        
      }
     
     return bins;
