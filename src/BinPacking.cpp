@@ -132,7 +132,8 @@ std::vector<std::vector<float>> BinPacking::OnlineBestFit(const std::vector<floa
 {
     std::vector<std::vector<float>> bins;
     std::vector<float> remainingBinWeight;
-
+    timespec start, stop;
+   // clock_gettime(CLOCK_REALTIME, &start);
     for(size_t i = 0; i < weights.size(); i++)
     {
         float min = BIN_CAPACITY + 1;
@@ -158,7 +159,13 @@ std::vector<std::vector<float>> BinPacking::OnlineBestFit(const std::vector<floa
             remainingBinWeight[bestBin] -= weights[i];
         }
     }
-
+     /*
+     clock_gettime(CLOCK_REALTIME, &stop);
+     double BFseconds = stop.tv_sec - start.tv_sec;
+     double BFnanoSeconds = stop.tv_nsec - start.tv_nsec;
+     double BFtotalTime = BFseconds + BFnanoSeconds / 1e9;
+     std::cout << "Total Run-Time: " << BFtotalTime << std::endl;
+    */
     return bins;
 }
 
@@ -218,6 +225,21 @@ void BinPacking::Sort(std::vector<float>& numbers)
     }
 }
 
+void BinPacking::SortAscending(std::vector<float>& numbers)
+{
+    int n = numbers.size();
+    for(int i = 0; i < n - 1; i++)
+    {
+        for(int j = 0; j < n - i - 1; j++)
+        {
+            if(numbers[j] > numbers[j+1])
+            {
+                Swap(numbers[j], numbers[j+1]);
+            }
+        }
+    }
+}
+
 
 /*
     @brief Helper function for Sort() that swaps the values of two
@@ -240,22 +262,34 @@ void BinPacking::Swap(T& a, T& b)
            potential solutions
     @param s: vector to permutate through
 */
-void BinPacking::perm1(std::vector<float>& s)
+std::vector<float> BinPacking::perm1(std::vector<float>& s)
 {
     int m, k, p, q;
 
     m = numItems - 2;
 
-    while(m > 0 && s[m] > s[m + 1])
+    while(m >= 0 && s[m] > s[m + 1])
     {
         m = m - 1;
     }
-
+    
     if(m < 0)
     {
+        std::cout << "m < 0" << std::endl;
+        for(auto& w : s)
+        {
+            std::cout << w << " ";
+        }
+        std::cout << std::endl;
         std::reverse(s.begin(), s.end());
-        return;
+        std::cout << "reversal" << std::endl;
+        for(auto& w : s)
+        {
+            std::cout << w << " ";
+        }
+        return s;
     }
+    
 
     k = numItems - 1;
     while(s[m] > s[k])
@@ -273,6 +307,8 @@ void BinPacking::perm1(std::vector<float>& s)
         p++;
         q--;
     }
+
+    return s;
 }
 
 
@@ -303,15 +339,83 @@ int BinPacking::Factorial(int n)
     @param weights: vector of item weights to iterate and pack through
 
     @return bins with populated item weights in each bin
-*/
+*
 std::vector<std::vector<float>> BinPacking::OptimalSolution(const std::vector<float>& weights)
 {
-     std::vector<std::vector<float>> bins;
+     std::vector<std::vector<float>> bestBins;
      int minBins = numItems;
 
-     std::vector<float> sortedWeights = weights;
-     Sort(sortedWeights);
+     std::vector<float> firstPermutation, lastPermutation;
+     bool isFirst = true;
 
+     std::vector<float> sortedWeights = weights;
+     SortAscending(sortedWeights);
+     //sortedWeights.push_back(0.0);
+
+     for(const auto& w : sortedWeights)
+     {
+        std::cout << w << " ";
+     }
+     std::cout << std::endl;
+
+     int numPermutations = Factorial(numItems);
+
+     int count = 0;
+     timespec start, stop;
+     clock_gettime(CLOCK_REALTIME, &start);
+
+     for(int i = 0; i < numPermutations; ++i)
+     {
+        /*
+        if(isFirst){
+            firstPermutation = sortedWeights;
+            isFirst = false;
+
+        }
+        *
+        
+        std::vector<std::vector<float>> currentBins = OnlineNextFit(sortedWeights);
+        int currentBinCount = currentBins.size();
+
+        // Check if the current permutation uses fewer bins
+        if (currentBinCount < minBins)
+        {
+            minBins = currentBinCount;
+            bestBins = currentBins;
+        }
+        perm1(sortedWeights);
+        count++;
+
+        /*
+        if (i == numPermutations - 1)
+        {
+            lastPermutation = sortedWeights;
+        }
+        *
+     }
+
+     clock_gettime(CLOCK_REALTIME, &stop);
+     
+     double BFseconds = stop.tv_sec - start.tv_sec;
+     double BFnanoSeconds = stop.tv_nsec - start.tv_nsec;
+     double BFtotalTime = BFseconds + BFnanoSeconds / 1e9;
+     std::cout << "Total Permutation Run-Time: " << BFtotalTime << std::endl;
+     std::cout << "Count = " << count << std::endl;
+    /*
+     std::cout << "First permutation: ";
+    for (const auto &weight : firstPermutation) {
+        std::cout << weight << " ";
+    }
+    std::cout << std::endl;
+
+    std::cout << "Last permutation: ";
+    for (const auto &weight : lastPermutation) {
+        std::cout << weight << " ";
+    }   
+    std::cout << std::endl;
+    *
+
+    /*
      int numPermutations = Factorial(numItems - 1);
 
      for(int i = 0; i < numPermutations; ++i)
@@ -327,9 +431,116 @@ std::vector<std::vector<float>> BinPacking::OptimalSolution(const std::vector<fl
 
         perm1(sortedWeights);
      }
+     *
     
+    return bestBins;
+}
+*/
+
+std::vector<std::vector<float>> BinPacking::OptimalSolution(const std::vector<float>& weights)
+{
+     std::vector<std::vector<float>> bins;
+     int minBins = numItems;
+
+     std::vector<float> sortedWeights = weights;
+     //SortAscending(sortedWeights);
+     Sort(sortedWeights);
+
+     int numPermutations = Factorial(numItems);
+
+     std::vector<std::vector<float>> permuationPopulation;
+     timespec start, stop, start2, stop2;
+     clock_gettime(CLOCK_REALTIME, &start);
+    // int count = 0;
+     for(size_t i = 0; i < numPermutations; ++i)
+     {
+        std::vector<float> currPerm = perm1(sortedWeights);
+        //count++;
+        permuationPopulation.push_back(currPerm);
+     }
+
+     clock_gettime(CLOCK_REALTIME, &stop);
+     double BFseconds = stop.tv_sec - start.tv_sec;
+     double BFnanoSeconds = stop.tv_nsec - start.tv_nsec;
+     double BFtotalTime = BFseconds + BFnanoSeconds / 1e9;
+     std::cout << "Total Permutation Run-Time: " << BFtotalTime << std::endl;
+     //std::cout << "count = " << count << std::endl;
+
+     clock_gettime(CLOCK_REALTIME, &start2);
+     //int i = permuationPopulation.size() - 1; i >= 0; --i
+     for(auto& perm : permuationPopulation)
+     {
+        std::vector<std::vector<float>> currBinPermuatation = OnlineBestFit(sortedWeights);
+        int currNumOfBins = currBinPermuatation.size();
+        
+        if(currNumOfBins < minBins)
+        {
+            minBins = currBinPermuatation.size();
+            bins = currBinPermuatation;
+        }
+
+        if(minBins == 6)
+        {
+            std::cout << "hit break" << std::endl;
+            break;
+        }
+     }
+     clock_gettime(CLOCK_REALTIME, &stop2);
+     double seconds = stop2.tv_sec - start2.tv_sec;
+     double nanoSeconds = stop2.tv_nsec - start2.tv_nsec;
+     double totalTime = seconds + nanoSeconds / 1e9;
+     std::cout << "Total Packing Run-Time: " << totalTime << std::endl;
+
     return bins;
 }
+
+/*
+std::vector<std::vector<float>> BinPacking::OptimalSolution(const std::vector<float>& weights) {
+    std::vector<std::vector<float>> bestBins;
+    int minBins = numItems;
+    int count = 0;
+
+    std::vector<float> sortedWeights = weights;
+    SortAscending(sortedWeights);
+
+    int numPermutations = Factorial(numItems);
+
+    timespec start, current;
+    clock_gettime(CLOCK_REALTIME, &start);
+
+    for (int i = 0; i < numPermutations; ++i) {
+        // Pack the current permutation
+        std::vector<std::vector<float>> currentBins = OnlineNextFit(sortedWeights);
+        int currentBinCount = currentBins.size();
+
+        // Check if this packing is better
+        if (currentBinCount < minBins) {
+            minBins = currentBinCount;
+            bestBins = currentBins;
+        }
+
+        // Generate next permutation
+        perm1(sortedWeights);
+        count++;
+
+        // Check elapsed time
+        clock_gettime(CLOCK_REALTIME, &current);
+        double secondsElapsed = current.tv_sec - start.tv_sec + (current.tv_nsec - start.tv_nsec) / 1e9;
+        
+        if (secondsElapsed > 30.0) {
+            std::cout << "Exceeded 30 seconds. Permutations attempted: " << count << std::endl;
+            break;
+        }
+        
+    }
+
+    std::cout << "Total Permutation Run-Time: " << " seconds" << std::endl;
+    std::cout << "Count = " << count << std::endl;
+
+    return bestBins;
+}
+
+*/
 
 
 /*

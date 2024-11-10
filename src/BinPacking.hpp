@@ -18,6 +18,7 @@
 #include <fstream>
 #include <algorithm>
 #include <iomanip>
+#include <ctime>
 
 class BinPacking
 {
@@ -30,12 +31,15 @@ class BinPacking
         // Helper function for offline algorithms to sort item weights
         void Sort(std::vector<float>& numbers);
 
+        // Helper function for optimal solution to sort item weights in ascending order
+        void SortAscending(std::vector<float>& numbers);
+
         // Helper function for Sort() to swap two weights if conditions are met
         template <typename T>
         void Swap(T& a, T& b);
 
         // Helper function to generate the optimal solution
-        void perm1(std::vector<float>& s);
+        std::vector<float> perm1(std::vector<float>& s);
 
         // Helper function to determine how many permutations we loop thru for optimal solution
         int Factorial(int n);
