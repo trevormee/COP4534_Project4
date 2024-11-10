@@ -262,7 +262,7 @@ void BinPacking::Swap(T& a, T& b)
            potential solutions
     @param s: vector to permutate through
 */
-std::vector<float> BinPacking::perm1(std::vector<float>& s)
+void BinPacking::perm1(std::vector<float>& s)
 {
     int m, k, p, q;
 
@@ -287,7 +287,7 @@ std::vector<float> BinPacking::perm1(std::vector<float>& s)
         {
             std::cout << w << " ";
         }
-        return s;
+        return;
     }
     
 
@@ -308,7 +308,7 @@ std::vector<float> BinPacking::perm1(std::vector<float>& s)
         q--;
     }
 
-    return s;
+    
 }
 
 
@@ -443,20 +443,18 @@ std::vector<std::vector<float>> BinPacking::OptimalSolution(const std::vector<fl
      int minBins = numItems;
 
      std::vector<float> sortedWeights = weights;
-     //SortAscending(sortedWeights);
-     Sort(sortedWeights);
+     SortAscending(sortedWeights);
+     //Sort(sortedWeights);
 
      int numPermutations = Factorial(numItems);
 
-     std::vector<std::vector<float>> permuationPopulation;
      timespec start, stop, start2, stop2;
      clock_gettime(CLOCK_REALTIME, &start);
-    // int count = 0;
+     int count = 0;
      for(size_t i = 0; i < numPermutations; ++i)
      {
-        std::vector<float> currPerm = perm1(sortedWeights);
-        //count++;
-        permuationPopulation.push_back(currPerm);
+        perm1(sortedWeights);
+        count++;
      }
 
      clock_gettime(CLOCK_REALTIME, &stop);
@@ -464,11 +462,12 @@ std::vector<std::vector<float>> BinPacking::OptimalSolution(const std::vector<fl
      double BFnanoSeconds = stop.tv_nsec - start.tv_nsec;
      double BFtotalTime = BFseconds + BFnanoSeconds / 1e9;
      std::cout << "Total Permutation Run-Time: " << BFtotalTime << std::endl;
-     //std::cout << "count = " << count << std::endl;
+     std::cout << "count = " << count << std::endl;
 
      clock_gettime(CLOCK_REALTIME, &start2);
+
      //int i = permuationPopulation.size() - 1; i >= 0; --i
-     for(auto& perm : permuationPopulation)
+     for()
      {
         std::vector<std::vector<float>> currBinPermuatation = OnlineBestFit(sortedWeights);
         int currNumOfBins = currBinPermuatation.size();

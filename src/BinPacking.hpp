@@ -39,7 +39,7 @@ class BinPacking
         void Swap(T& a, T& b);
 
         // Helper function to generate the optimal solution
-        std::vector<float> perm1(std::vector<float>& s);
+        void perm1(std::vector<float>& s);
 
         // Helper function to determine how many permutations we loop thru for optimal solution
         int Factorial(int n);
