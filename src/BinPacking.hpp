@@ -19,6 +19,7 @@
 #include <algorithm>
 #include <iomanip>
 #include <cmath>
+#include <numeric>
 
 class BinPacking
 {

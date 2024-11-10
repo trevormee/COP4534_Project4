@@ -242,37 +242,60 @@ void BinPacking::Swap(T& a, T& b)
 */
 void BinPacking::perm1(std::vector<float>& s)
 {
+    std::cout << "perm 1..." << std::endl;
+    /*
+    std::cout << "Current permutation: ";
+    for (float val : s)
+    {
+        std::cout << val << " ";
+    }
+    std::cout << std::endl;
+    */
+    
     int m, k, p, q;
 
     m = numItems - 2;
 
-    while(m > 0 && s[m] > s[m + 1])
+    // m > 0 &&
+    while(m >= 0 && s[m] > s[m + 1])
     {
         m = m - 1;
     }
-
+    
+    
     if(m < 0)
     {
         std::reverse(s.begin(), s.end());
         return;
     }
+    
+    
 
     k = numItems - 1;
+
     while(s[m] > s[k])
     {
         k = k - 1;
     }
 
-    Swap(s[m],s[k]);
+    std::swap(s[m],s[k]);
 
     p = m + 1;
     q = numItems - 1;
     while (p < q)
     {
-        Swap(s[p], s[q]);
+        std::swap(s[p], s[q]);
         p++;
         q--;
     }
+    /*
+    std::cout << "After swap permutation: ";
+    for (float val : s)
+    {
+        std::cout << val << " ";
+    }
+    std::cout << std::endl;
+    */
 }
 
 
@@ -303,7 +326,7 @@ int BinPacking::Factorial(int n)
     @param weights: vector of item weights to iterate and pack through
 
     @return bins with populated item weights in each bin
-*/
+*
 std::vector<std::vector<float>> BinPacking::OptimalSolution(const std::vector<float>& weights)
 {
     std::vector<std::vector<float>> bins;
@@ -338,15 +361,26 @@ std::vector<std::vector<float>> BinPacking::OptimalSolution(const std::vector<fl
         std::vector<std::vector<float>> currBinPermuatation = OnlineBestFit(sortedWeights);
         int currNumOfBins = currBinPermuatation.size();
         
-        if(currNumOfBins < minBins)
+        if(currNumOfBins > minBins)
+        {
+            std::cout << "Break point" << std::endl;
+            break;
+        }
+        
+         else if instead of just if
+        else if(currNumOfBins < minBins)
         {
             minBins = currBinPermuatation.size();
             bins = currBinPermuatation;
-
-            if (minBins <= minNumberOfBinsNeeded)
+            
+            /*
+            if (minBins > minNumberOfBinsNeeded)
             {
+                std::cout << "Hit break point" << std::endl;
                 break;
             }
+            *
+            
         }
 
         perm1(sortedWeights);
@@ -354,6 +388,69 @@ std::vector<std::vector<float>> BinPacking::OptimalSolution(const std::vector<fl
     std::cout << "Count = " << count << std::endl;
     return bins;
 }
+*/
+
+// MAIN BRANCH VERSION
+std::vector<std::vector<float>> BinPacking::OptimalSolution(const std::vector<float>& weights)
+{
+     std::vector<std::vector<float>> bins;
+     int minBins = numItems;
+     bool foundOptimal = false;
+
+     std::vector<float> sortedWeights = weights;
+     Sort(sortedWeights);
+
+    int count = 0;
+    float sum = 0.0f;
+    for (float weight : sortedWeights)
+    {
+        sum += weight;
+    }
+
+    // Calculate the minimum bins by taking the ceiling of (sum / BIN_CAPACITY)
+    int minNumberOfBinsNeeded = static_cast<int>(std::ceil(sum / BIN_CAPACITY));
+    std::cout << "sum = " << sum << std::endl;
+    std::cout << "Min num bins needed = " << minNumberOfBinsNeeded << std::endl;   
+     int numPermutations = Factorial(numItems - 1);
+
+     for(int i = 0; i < numPermutations; ++i)
+     {
+        std::vector<std::vector<float>> currBinPermuatation = OnlineBestFit(sortedWeights);
+        int currNumOfBins = currBinPermuatation.size();
+        
+        if(currNumOfBins > minBins)
+        {
+            std::cout << "found optimal"  << std::endl;
+            foundOptimal = true;
+            break;
+        }
+
+        if(currNumOfBins < minBins)
+        {
+            minBins = currBinPermuatation.size();
+            bins = currBinPermuatation;
+            float totalWeight = std::accumulate(weights.begin(), weights.end(), 0.0f);
+            int minPossibleBins = static_cast<int>(std::ceil(totalWeight / BIN_CAPACITY));
+            if (minBins == minPossibleBins)
+            {
+                std::cout << "minBins == minPossibleBins" << std::endl;
+                foundOptimal = true;
+                break;
+            }
+        }
+        if(!foundOptimal)
+            perm1(sortedWeights);
+        else
+            break;
+
+        count++;
+        
+     }
+    
+    std::cout << "count = " << count << std::endl;
+    return bins;
+}
+
 
 
 /*
